@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lab9</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/favicon.ico" type="image/ico" sizes="48x48">
+    <link rel="manifest" href="./manifest.json">
+    <script>
+        function getData() {
+            var uid = document.getElementById('guid').value;
+            fetch('https://api.github.com/users/' + uid)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    if (data.message !== 'Not Found') {
+                        document.getElementById('msg').style.visibility = 'hidden';
+                        document.getElementById('gtable').style.visibility = 'visible';
+                        document.getElementById('gid').innerHTML = data.id;
+                        document.getElementById('glogin').innerHTML = data.login;
+                        document.getElementById('guser').innerHTML = data.name;
+                        document.getElementById('gprofile').innerHTML = data.html_url;
+                    } else {
+                        document.getElementById('gtable').style.visibility = 'hidden';
+                        document.getElementById('msg').style.visibility = 'visible';
+                    }
+                })
+                .catch((err) => {
+                    console.log('error ', err);
+                });
+        }
+    </script>
+</head>
+
+<body align="center">
+    <center>
+        <table>
+            <tr>
+                <td>Enter Git User Id : </td>
+                <td><input type="text" id="guid"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="button" value="Get" onclick="getData()"> </td>
+            </tr>
+        </table><br><br><br>
+
+        <div>
+            <table border="2" id="gtable" style="visibility: hidden">
+                <caption>Git User Profile</caption>
+                <tr>
+                    <td>Git ID</td>
+                    <td id="gid"></td>
+                </tr>
+                <tr>
+                    <td>Git Login</td>
+                    <td id="glogin"></td>
+                </tr>
+                <tr>
+                    <td>Git Username</td>
+                    <td id="guser"></td>
+                </tr>
+                <tr>
+                    <td>Git Profile</td>
+                    <td id="gprofile"></td>
+                </tr>
+            </table>
+            <span id="msg" style="visibility: hidden">No Data Found!!!</span>
+        </div>
+    </center>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+
+</body>
+
+</html>
